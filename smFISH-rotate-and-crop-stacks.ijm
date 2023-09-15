@@ -1,45 +1,56 @@
-Saturation = 2.0;
-w= 220; h = 220;// selection size
+saturation = 0.3;
+//scale_factor = 0.5;
+w= 150; h = 300;// selection size
 
 inputFolder = getDirectory("Choose the folder containing images to process:");
 // Create an output folder based on the inputFolder
 parentFolder = getPath(inputFolder); inputFolderPrefix = getPathFilenamePrefix(inputFolder);
-outputFolder = parentFolder + inputFolderPrefix + "-rotated" + File.separator;
+outputFolder = parentFolder + inputFolderPrefix + "-rotated-cropped" + File.separator;
 if ( !(File.exists(outputFolder)) ) { File.makeDirectory(outputFolder); }
 
 flist = getFileList(inputFolder);
 
 //setBatchMode(true);
-
-run ("Close All");
+run("Close All");
 run("Clear Results");
 
-for (i=0; i<flist.length; i++) {
+//for (i=0; i<flist.length; i++) {
+for (i=95; i<flist.length; i++) {
 	showProgress(i+1, flist.length);
 	filename = inputFolder+flist[i];
-	if ( endsWith(filename, ".tif") || endsWith(filename, ".nd2") ) {
-		open(filename);
+	outputPrefix = getFilenamePrefix(flist[i]);
+	if ( endsWith(filename, ".nd2") || endsWith(filename, ".tif") ) {
+		open(filename); id0 = getImageID();
+		run("Z Project...", "projection=[Max Intensity]"); idMIP = getImageID();
 
-		setBackgroundColor(0, 0, 0);//fill with black
-		run("Enhance Contrast", "saturated="+Saturation);
+		selectImage(idMIP);
+		Stack.setChannel(1); run("Enhance Contrast", "saturated="+saturation);
 
+		// Draw a line to determine the angle to rotate
 		setTool("line");
-		waitForUser("Draw a line apical to basal:");
+		waitForUser("Draw a line basal to apical:");
 		run("Clear Results");
 		run("Measure");
-		lineAngle = getResult("Angle", 0) + 90;
-		run("Select None");
-		run("Rotate...", "angle="+lineAngle+" interpolation=Bilinear enlarge stack");
+		lineAngle = getResult("Angle", 0) - 90;
 		
-		filenameParts = split(flist[i],".");
-		makeRectangle(0, 0, w, h);
-		waitForUser("Now move around the rectangular selection");
-		run("Duplicate...", "duplicate");
-		saveAs("Tiff", outputFolder+filenameParts[0]+".tif");
+		// Rotate both MIP and original images
+		selectImage(id0);run("Select None");
+		run("Rotate...", "angle="+lineAngle+" interpolation=Bilinear enlarge stack");
+		selectImage(idMIP);run("Select None");
+		run("Rotate...", "angle="+lineAngle+" interpolation=Bilinear enlarge stack");
+
+		// Draw a bounding box of the cell to qantify
+		setTool(0); // rectangle
+		selectImage(idMIP); makeRectangle(0, 0, w, h);
+		waitForUser("Adjust the rectangular selection");
+
+		selectImage(id0); run("Restore Selection"); run("Duplicate...", "duplicate"); idDup = getImageID();
+		saveAs("Tiff", outputFolder+outputPrefix+'.tif');
 		
 		run ("Close All");
 		run("Clear Results");
 		setBackgroundColor(0, 0, 0);//reset black background color
+		
 	}
 }
 

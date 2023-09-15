@@ -1,20 +1,20 @@
 inputFolder = getDirectory("Choose the folder containing images to process:");
 // Create an output folder based on the inputFolder
 parentFolder = getPath(inputFolder); inputFolderPrefix = getPathFilenamePrefix(inputFolder);
-outputFolder = parentFolder + inputFolderPrefix + "-output" + File.separator;
+outputFolder = parentFolder + inputFolderPrefix + "-MIP" + File.separator;
 if ( !(File.exists(outputFolder)) ) { File.makeDirectory(outputFolder); }
 
 run("Close All");
 setBatchMode(true);
 
 Dialog.create("Specify parameters:");
-Dialog.addString("Channel 1 name", "DAPI");
-Dialog.addString("Channel 2 name", "Col4a1-TMR");
+Dialog.addString("Channel 1 name", "sfGFP");
+Dialog.addString("Channel 2 name", "SSG-TMR");
 Dialog.addString("Channel 3 name", "NA");
 Dialog.addString("Channel 4 name", "NA");
-//Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Max Intensity Projection", "Middle Slice", "Specify Slice Number"));
+Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Max Intensity Projection", "Middle Slice", "Specify Slice Number"));
 //Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Middle Slice", "Specify Slice Number", "Max Intensity Projection"));
-Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Specify Slice Number", "Max Intensity Projection", "Middle Slice"));
+//Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Specify Slice Number", "Max Intensity Projection", "Middle Slice"));
 Dialog.addNumber("Which slice?", 1)
 Dialog.addChoice("Keep temp files to accelerate re-processing?", newArray("Yes", "No"));
 Dialog.show();
@@ -39,10 +39,11 @@ function processSingleSlice(id, typePrefix, outputFolder, outputPrefix) {
 //	idC3 = getChannel(id, 3);
 //	idC4 = getChannel(id, 4);
 
-	saturation = 1.0; idC1_8bit = to8bitSatu( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix );
+//	saturation = 0.1; idC1_8bit = to8bitSatu( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix );
+	saturation = 0.1; idC1_8bit = to8bitSatu_resize( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix, 210, 300 );
 //	c1min = 50; c1max = 1500; idC1_8bit = to8bitMinMax( idC1, typePrefix + "-" + c1name, c1min, c1max, outputFolder, outputPrefix );
-	//saturation = 0.5; idC2_8bit = to8bitSatu( idC2, typePrefix + "-" + c2name, saturation, outputFolder, outputPrefix );
-	c2min = 15; c2max = 600; idC2_8bit = to8bitMinMax( idC2, typePrefix + "-" + c2name, c2min, c2max, outputFolder, outputPrefix );
+	saturation = 1.0; idC2_8bit = to8bitSatu_resize( idC2, typePrefix + "-" + c2name, saturation, outputFolder, outputPrefix, 210, 300 );
+//	c2min = 15; c2max = 600; idC2_8bit = to8bitMinMax( idC2, typePrefix + "-" + c2name, c2min, c2max, outputFolder, outputPrefix );
 	//saturation = 0.5; idC3_8bit = to8bitSatu( idC3, typePrefix + "-" + c3name, saturation, outputFolder, outputPrefix );
 	//c3min = 20; c3max = 1200; idC3_8bit = to8bitMinMax( idC3, typePrefix + "-" + c3name, c3min, c3max, outputFolder, outputPrefix );
 	//saturation = 0.3; idC4_8bit = to8bitSatu( idC4, typePrefix + "-" + c4name, saturation, outputFolder, outputPrefix );
@@ -58,11 +59,12 @@ function processSingleSlice(id, typePrefix, outputFolder, outputPrefix) {
 	//montage3( BGM, idC2_8bit, idC3_8bit, outputFolder, outputPrefix + "-" + typePrefix );
 	
 	// merge c1 as blue and c2 as gray
-	BGr = mergeBGr( idC1_8bit, c1name, idC2_8bit, c2name, outputFolder, outputPrefix + "-" + typePrefix );
-	montage2( BGr, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
+//	BGr = mergeBGr( idC1_8bit, c1name, idC2_8bit, c2name, outputFolder, outputPrefix + "-" + typePrefix );
+//	montage2( BGr, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
 
 	// merge c1 as green and c2 as magenta
-	//GM = mergeGM(idC1_8bit, c1name, idC2_8bit, c2name, outputFolder, outputPrefix + "-" + typePrefix);
+//	GM = mergeGM(idC1_8bit, c1name, idC2_8bit, c2name, outputFolder, outputPrefix + "-" + typePrefix);
+	GM = mergeGM_resize(idC1_8bit, c1name, idC2_8bit, c2name, outputFolder, outputPrefix + "-" + typePrefix, 210, 300);
 	//montage2( GM, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
 	//montage3( GM, idC1_8bit, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
 
@@ -207,6 +209,16 @@ function to8bitSatu( id, cName, satu, outputFolder, outputPrefix ){
 	//id8bit = getImageID(); return id8bit;
 }
 
+// scale the image using saturation, change to 8-bit, resize, and save it
+function to8bitSatu_resize( id, cName, satu, outputFolder, outputPrefix, new_w, new_h ){
+	selectImage(id); run("Grays"); run("Enhance Contrast", "saturated="+satu); run("8-bit");
+	run("Canvas Size...", "width="+new_w+" height="+new_h+" position=Center zero");
+	outputFilename = outputPrefix + "-" + cName + "-8bit.tif";
+	saveAs("Tiff", outputFolder + outputFilename);
+	return outputFilename;
+	//id8bit = getImageID(); return id8bit;
+}
+
 // scale the image using specified min and max, change to 8-bit and save it
 function to8bitMinMax( id, cName, imgMin, imgMax, outputFolder, outputPrefix ){
 	selectImage(id); run("Grays"); setMinAndMax(imgMin, imgMax); run("8-bit");
@@ -256,6 +268,16 @@ function mergeGM( cGreen, greenName, cMagenta, magentaname, outputFolder, output
 	// merge channels in order in green and magenta colors
 	// c1: red; c2: green; c3:blue; c4:gray; c5:cyan; c6: magenta; c7: yellow
 	run("Merge Channels...", "c2=["+cGreen+"] c6=["+cMagenta+"] keep");
+	outputFilename = outputPrefix + "-" + greenName + "_inGreen-" + magentaname + "_inMagenta.tif";
+	saveAs("Tiff", outputFolder + outputFilename);
+	return outputFilename;
+}
+
+function mergeGM_resize( cGreen, greenName, cMagenta, magentaname, outputFolder, outputPrefix, new_w, new_h ){
+	// merge channels in order in green and magenta colors
+	// c1: red; c2: green; c3:blue; c4:gray; c5:cyan; c6: magenta; c7: yellow
+	run("Merge Channels...", "c2=["+cGreen+"] c6=["+cMagenta+"] keep");
+	run("Canvas Size...", "width="+new_w+" height="+new_h+" position=Center zero");
 	outputFilename = outputPrefix + "-" + greenName + "_inGreen-" + magentaname + "_inMagenta.tif";
 	saveAs("Tiff", outputFolder + outputFilename);
 	return outputFilename;

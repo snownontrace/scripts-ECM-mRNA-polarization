@@ -1,4 +1,4 @@
-inputFolder = getDirectory("Choose the folder containing images to process:");
+inputFolder = "/Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/data/Fig3-polarization-cytoskeletal-drugs/201117-smFISH-Col4a1-TMR-cytoskeletal-inhibitors-collagenase/20201117-smFISH-Col4a1-TMR-3-colch-2h/";
 // Create an output folder based on the inputFolder
 parentFolder = getPath(inputFolder); inputFolderPrefix = getPathFilenamePrefix(inputFolder);
 outputFolder = parentFolder + inputFolderPrefix + "-output" + File.separator;
@@ -7,24 +7,13 @@ if ( !(File.exists(outputFolder)) ) { File.makeDirectory(outputFolder); }
 run("Close All");
 setBatchMode(true);
 
-Dialog.create("Specify parameters:");
-Dialog.addString("Channel 1 name", "DAPI");
-Dialog.addString("Channel 2 name", "Col4a1-TMR");
-Dialog.addString("Channel 3 name", "NA");
-Dialog.addString("Channel 4 name", "NA");
-//Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Max Intensity Projection", "Middle Slice", "Specify Slice Number"));
-//Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Middle Slice", "Specify Slice Number", "Max Intensity Projection"));
-Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Specify Slice Number", "Max Intensity Projection", "Middle Slice"));
-Dialog.addNumber("Which slice?", 1)
-Dialog.addChoice("Keep temp files to accelerate re-processing?", newArray("Yes", "No"));
-Dialog.show();
-c1name = Dialog.getString();
-c2name = Dialog.getString();
-c3name = Dialog.getString();
-c4name = Dialog.getString();
-type = Dialog.getChoice();
-specifiedSliceNumber = Dialog.getNumber();
-keepTemp = Dialog.getChoice();
+c1name = "DAPI";
+c2name = "Col4a1-TMR";
+//c3name = "Ecad";
+//c4name = "Col4";
+type = "Specify Slice Number";
+specifiedSliceNumber = 1;
+keepTemp = "Yes";
 
 processIFfolder(inputFolder, outputFolder);
 
@@ -39,10 +28,10 @@ function processSingleSlice(id, typePrefix, outputFolder, outputPrefix) {
 //	idC3 = getChannel(id, 3);
 //	idC4 = getChannel(id, 4);
 
-	saturation = 1.0; idC1_8bit = to8bitSatu( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix );
+	saturation = 0.5; idC1_8bit = to8bitSatu( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix );
 //	c1min = 50; c1max = 1500; idC1_8bit = to8bitMinMax( idC1, typePrefix + "-" + c1name, c1min, c1max, outputFolder, outputPrefix );
-	//saturation = 0.5; idC2_8bit = to8bitSatu( idC2, typePrefix + "-" + c2name, saturation, outputFolder, outputPrefix );
-	c2min = 15; c2max = 600; idC2_8bit = to8bitMinMax( idC2, typePrefix + "-" + c2name, c2min, c2max, outputFolder, outputPrefix );
+//	saturation = 1.5; idC2_8bit = to8bitSatu( idC2, typePrefix + "-" + c2name, saturation, outputFolder, outputPrefix );
+	c2min = 20; c2max = 170; idC2_8bit = to8bitMinMax( idC2, typePrefix + "-" + c2name, c2min, c2max, outputFolder, outputPrefix );
 	//saturation = 0.5; idC3_8bit = to8bitSatu( idC3, typePrefix + "-" + c3name, saturation, outputFolder, outputPrefix );
 	//c3min = 20; c3max = 1200; idC3_8bit = to8bitMinMax( idC3, typePrefix + "-" + c3name, c3min, c3max, outputFolder, outputPrefix );
 	//saturation = 0.3; idC4_8bit = to8bitSatu( idC4, typePrefix + "-" + c4name, saturation, outputFolder, outputPrefix );

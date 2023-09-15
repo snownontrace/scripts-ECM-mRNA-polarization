@@ -1,4 +1,5 @@
-inputFolder = getDirectory("Choose the folder containing images to process:");
+//inputFolder = getDirectory("Choose the folder containing images to process:");
+inputFolder = "/Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/data/Fig3-polarization-cytoskeletal-drugs/20201205-SMG-IF-PDI-phalloidin-collagenIV-40x-WI/";
 // Create an output folder based on the inputFolder
 parentFolder = getPath(inputFolder); inputFolderPrefix = getPathFilenamePrefix(inputFolder);
 outputFolder = parentFolder + inputFolderPrefix + "-output" + File.separator;
@@ -7,24 +8,13 @@ if ( !(File.exists(outputFolder)) ) { File.makeDirectory(outputFolder); }
 run("Close All");
 setBatchMode(true);
 
-Dialog.create("Specify parameters:");
-Dialog.addString("Channel 1 name", "DAPI");
-Dialog.addString("Channel 2 name", "Col4a1-TMR");
-Dialog.addString("Channel 3 name", "NA");
-Dialog.addString("Channel 4 name", "NA");
-//Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Max Intensity Projection", "Middle Slice", "Specify Slice Number"));
-//Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Middle Slice", "Specify Slice Number", "Max Intensity Projection"));
-Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Specify Slice Number", "Max Intensity Projection", "Middle Slice"));
-Dialog.addNumber("Which slice?", 1)
-Dialog.addChoice("Keep temp files to accelerate re-processing?", newArray("Yes", "No"));
-Dialog.show();
-c1name = Dialog.getString();
-c2name = Dialog.getString();
-c3name = Dialog.getString();
-c4name = Dialog.getString();
-type = Dialog.getChoice();
-specifiedSliceNumber = Dialog.getNumber();
-keepTemp = Dialog.getChoice();
+c1name = "DAPI";
+c2name = "Col4";
+c3name = "F-actin";
+//c4name = "Col4";
+type = "Middle Slice";
+specifiedSliceNumber = 1;
+keepTemp = "Yes";
 
 processIFfolder(inputFolder, outputFolder);
 
@@ -36,40 +26,21 @@ function processSingleSlice(id, typePrefix, outputFolder, outputPrefix) {
 
 	idC1 = getChannel(id, 1);
 	idC2 = getChannel(id, 2);
-//	idC3 = getChannel(id, 3);
+	idC3 = getChannel(id, 3);
 //	idC4 = getChannel(id, 4);
 
-	saturation = 1.0; idC1_8bit = to8bitSatu( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix );
-//	c1min = 50; c1max = 1500; idC1_8bit = to8bitMinMax( idC1, typePrefix + "-" + c1name, c1min, c1max, outputFolder, outputPrefix );
-	//saturation = 0.5; idC2_8bit = to8bitSatu( idC2, typePrefix + "-" + c2name, saturation, outputFolder, outputPrefix );
-	c2min = 15; c2max = 600; idC2_8bit = to8bitMinMax( idC2, typePrefix + "-" + c2name, c2min, c2max, outputFolder, outputPrefix );
-	//saturation = 0.5; idC3_8bit = to8bitSatu( idC3, typePrefix + "-" + c3name, saturation, outputFolder, outputPrefix );
-	//c3min = 20; c3max = 1200; idC3_8bit = to8bitMinMax( idC3, typePrefix + "-" + c3name, c3min, c3max, outputFolder, outputPrefix );
-	//saturation = 0.3; idC4_8bit = to8bitSatu( idC4, typePrefix + "-" + c4name, saturation, outputFolder, outputPrefix );
-	//c4min = 20; c4max = 1200; idC4_8bit = to8bitMinMax( idC4, typePrefix + "-" + c4name, c4min, c4max, outputFolder, outputPrefix );
+	saturation = 0.01; idC1_8bit = to8bitSatu( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix );
+//	c1min = 100; c1max = 1500; idC1_8bit = to8bitMinMax( idC1, typePrefix + "-" + c1name, c1min, c1max, outputFolder, outputPrefix );
+//	saturation = 2.0; idC2_8bit = to8bitSatu( idC2, typePrefix + "-" + c2name, saturation, outputFolder, outputPrefix );
+	c2min = 50; c2max = 500; idC2_8bit = to8bitMinMax( idC2, typePrefix + "-" + c2name, c2min, c2max, outputFolder, outputPrefix );
+//	saturation = 0.5; idC3_8bit = to8bitSatu( idC3, typePrefix + "-" + c3name, saturation, outputFolder, outputPrefix );
+	c3min = 0; c3max = 1500; idC3_8bit = to8bitMinMax( idC3, typePrefix + "-" + c3name, c3min, c3max, outputFolder, outputPrefix );
+//	saturation = 5.0; idC4_8bit = to8bitSatu( idC4, typePrefix + "-" + c4name, saturation, outputFolder, outputPrefix );
+//	c4min = 50; c4max = 500; idC4_8bit = to8bitMinMax( idC4, typePrefix + "-" + c4name, c4min, c4max, outputFolder, outputPrefix );
 
-//	mergeBGMY( idC4_8bit, c4name, idC2_8bit, c2name, idC3_8bit, c3name, idC1_8bit, c1name, outputFolder, outputPrefix );
-//	mergeBGMY( idC1_8bit, c1name, idC2_8bit, c2name, idC3_8bit, c3name, idC4_8bit, c4name, outputFolder, outputPrefix );
-//	mergeCGMY( idC4_8bit, c4name, idC2_8bit, c2name, idC3_8bit, c3name, idC1_8bit, c1name, outputFolder, outputPrefix );
-	
-	// merge c1 as blue, c2 as green, c3 as magenta
-	//BGM = mergeBGM( idC1_8bit, c1name, idC2_8bit, c2name, idC3_8bit, c3name, outputFolder, outputPrefix + "-" + typePrefix );
-	//montage2( BGM, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
-	//montage3( BGM, idC2_8bit, idC3_8bit, outputFolder, outputPrefix + "-" + typePrefix );
-	
-	// merge c1 as blue and c2 as gray
-	BGr = mergeBGr( idC1_8bit, c1name, idC2_8bit, c2name, outputFolder, outputPrefix + "-" + typePrefix );
-	montage2( BGr, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
+	BGM = mergeBGM( idC1_8bit, c1name, idC2_8bit, c2name, idC3_8bit, c3name, outputFolder, outputPrefix + "-" + typePrefix );
 
-	// merge c1 as green and c2 as magenta
-	//GM = mergeGM(idC1_8bit, c1name, idC2_8bit, c2name, outputFolder, outputPrefix + "-" + typePrefix);
-	//montage2( GM, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
-	//montage3( GM, idC1_8bit, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
-
-	// merge c2 as green and c3 or c4 as magenta
-	//GM1 = mergeGM(idC2_8bit, c2name, idC3_8bit, c3name, outputFolder, outputPrefix + "-" + typePrefix);
-	//GM2 = mergeGM(idC2_8bit, c2name, idC4_8bit, c4name, outputFolder, outputPrefix + "-" + typePrefix);
-	//montage3( GM1, GM2, idC2_8bit, outputFolder, outputPrefix + "-" + typePrefix );
+	GM = mergeGM( idC2_8bit, c2name, idC3_8bit, c3name, outputFolder, outputPrefix + "-" + typePrefix );
 	
 	return 1;
 }
@@ -252,11 +223,11 @@ function montage4( f1, f2, f3, f4, outputFolder, outputPrefix ){
 	return outputFilename;
 }
 
-function mergeGM( cGreen, greenName, cMagenta, magentaname, outputFolder, outputPrefix ){
+function mergeGM( cGreen, greenName, cMagenta, magentaName, outputFolder, outputPrefix ){
 	// merge channels in order in green and magenta colors
 	// c1: red; c2: green; c3:blue; c4:gray; c5:cyan; c6: magenta; c7: yellow
 	run("Merge Channels...", "c2=["+cGreen+"] c6=["+cMagenta+"] keep");
-	outputFilename = outputPrefix + "-" + greenName + "_inGreen-" + magentaname + "_inMagenta.tif";
+	outputFilename = outputPrefix + "-" + greenName + "_inGreen-" + magentaName + "_inMagenta.tif";
 	saveAs("Tiff", outputFolder + outputFilename);
 	return outputFilename;
 }

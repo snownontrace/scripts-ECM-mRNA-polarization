@@ -1,45 +1,31 @@
-Saturation = 2.0;
-w= 220; h = 220;// selection size
-
 inputFolder = getDirectory("Choose the folder containing images to process:");
+//inputFolder = '/Volumes/ShaoheGtech/2018-3-Shaohe/181017-18-pW131-pW133-SIMS-Fn1-smFISH/';
 // Create an output folder based on the inputFolder
 parentFolder = getPath(inputFolder); inputFolderPrefix = getPathFilenamePrefix(inputFolder);
-outputFolder = parentFolder + inputFolderPrefix + "-rotated" + File.separator;
+outputFolder = parentFolder + inputFolderPrefix + "-output" + File.separator;
 if ( !(File.exists(outputFolder)) ) { File.makeDirectory(outputFolder); }
 
-flist = getFileList(inputFolder);
+run("Close All");
+setBatchMode(true);
 
-//setBatchMode(true);
+processFolder(inputFolder, outputFolder);
 
-run ("Close All");
-run("Clear Results");
-
-for (i=0; i<flist.length; i++) {
-	showProgress(i+1, flist.length);
-	filename = inputFolder+flist[i];
-	if ( endsWith(filename, ".tif") || endsWith(filename, ".nd2") ) {
-		open(filename);
-
-		setBackgroundColor(0, 0, 0);//fill with black
-		run("Enhance Contrast", "saturated="+Saturation);
-
-		setTool("line");
-		waitForUser("Draw a line apical to basal:");
-		run("Clear Results");
-		run("Measure");
-		lineAngle = getResult("Angle", 0) + 90;
-		run("Select None");
-		run("Rotate...", "angle="+lineAngle+" interpolation=Bilinear enlarge stack");
+function processFolder(inputFolder, outputFolder) {
+	
+	flist = getFileList(inputFolder);
+	//for (i=0; i<1; i++) {//for testing
+	for (i=0; i<flist.length; i++) {
+		filename = inputFolder + flist[i];
+		outputPrefix = getFilenamePrefix(flist[i]);
 		
-		filenameParts = split(flist[i],".");
-		makeRectangle(0, 0, w, h);
-		waitForUser("Now move around the rectangular selection");
-		run("Duplicate...", "duplicate");
-		saveAs("Tiff", outputFolder+filenameParts[0]+".tif");
-		
-		run ("Close All");
-		run("Clear Results");
-		setBackgroundColor(0, 0, 0);//reset black background color
+		if ( endsWith(flist[i], ".nd2") || endsWith(flist[i], ".czi") || endsWith(flist[i], ".tif") ) {
+			open(filename);
+			run("Show Info...");
+			saveAs("Text", outputFolder + outputPrefix + "-info.txt");
+			run("Close All");
+			selectWindow("Info for " + flist[i]);
+			run("Close");
+		}
 	}
 }
 
@@ -71,4 +57,18 @@ function getFilenamePrefix(filename) {
 	// this one takes just the file name without folder path
 	temp = split(filename, ".");
 	return temp[0];
+}
+
+function deleteFolder(folder) {
+	// Delete all the files inside the folder, then the folder itself
+	list = getFileList(folder);
+	// Delete the files and the folder
+	for (i=0; i<list.length; i++){
+		ok = File.delete(folder+list[i]);
+	}
+	ok = File.delete(folder);
+	if (File.exists(folder))
+		exit("Unable to delete the folder: " + folder);
+	else
+		print("Successfully deleted: " + folder);
 }

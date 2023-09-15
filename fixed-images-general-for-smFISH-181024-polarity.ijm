@@ -1,4 +1,6 @@
-inputFolder = getDirectory("Choose the folder containing images to process:");
+//inputFolder = getDirectory("Choose the folder containing images to process:");
+inputFolder = "/Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/data/Fig3-polarization-cytoskeletal-drugs/181024-polarity-Golgi-ER-costaining-ctrl-bleb-noc-Y27632/";
+
 // Create an output folder based on the inputFolder
 parentFolder = getPath(inputFolder); inputFolderPrefix = getPathFilenamePrefix(inputFolder);
 outputFolder = parentFolder + inputFolderPrefix + "-output" + File.separator;
@@ -14,7 +16,7 @@ Dialog.addString("Channel 3 name", "NA");
 Dialog.addString("Channel 4 name", "NA");
 //Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Max Intensity Projection", "Middle Slice", "Specify Slice Number"));
 //Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Middle Slice", "Specify Slice Number", "Max Intensity Projection"));
-Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Specify Slice Number", "Max Intensity Projection", "Middle Slice"));
+Dialog.addChoice("Process MIP, middle slice or specified slice?", newArray("Middle Slice", "Specify Slice Number", "Max Intensity Projection"));
 Dialog.addNumber("Which slice?", 1)
 Dialog.addChoice("Keep temp files to accelerate re-processing?", newArray("Yes", "No"));
 Dialog.show();
@@ -35,14 +37,14 @@ processIFfolder(inputFolder, outputFolder);
 function processSingleSlice(id, typePrefix, outputFolder, outputPrefix) {
 
 	idC1 = getChannel(id, 1);
-	idC2 = getChannel(id, 2);
+	idC2 = getChannel(id, 3);
 //	idC3 = getChannel(id, 3);
 //	idC4 = getChannel(id, 4);
 
-	saturation = 1.0; idC1_8bit = to8bitSatu( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix );
+	saturation = 0.3; idC1_8bit = to8bitSatu( idC1, typePrefix + "-" + c1name, saturation, outputFolder, outputPrefix );
 //	c1min = 50; c1max = 1500; idC1_8bit = to8bitMinMax( idC1, typePrefix + "-" + c1name, c1min, c1max, outputFolder, outputPrefix );
-	//saturation = 0.5; idC2_8bit = to8bitSatu( idC2, typePrefix + "-" + c2name, saturation, outputFolder, outputPrefix );
-	c2min = 15; c2max = 600; idC2_8bit = to8bitMinMax( idC2, typePrefix + "-" + c2name, c2min, c2max, outputFolder, outputPrefix );
+	saturation = 0.5; idC2_8bit = to8bitSatu( idC2, typePrefix + "-" + c2name, saturation, outputFolder, outputPrefix );
+//	c2min = 480; c2max = 8500; idC2_8bit = to8bitMinMax( idC2, typePrefix + "-" + c2name, c2min, c2max, outputFolder, outputPrefix );
 	//saturation = 0.5; idC3_8bit = to8bitSatu( idC3, typePrefix + "-" + c3name, saturation, outputFolder, outputPrefix );
 	//c3min = 20; c3max = 1200; idC3_8bit = to8bitMinMax( idC3, typePrefix + "-" + c3name, c3min, c3max, outputFolder, outputPrefix );
 	//saturation = 0.3; idC4_8bit = to8bitSatu( idC4, typePrefix + "-" + c4name, saturation, outputFolder, outputPrefix );

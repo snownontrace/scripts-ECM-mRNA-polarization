@@ -11,16 +11,18 @@ echo ""
 echo "~*~*~*~*~*~*~*~*~*~*~*~*~*"
 
 ############ backup work in Box to the Gtech drive ############
-rsync -vurt --progress /Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/data/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/data/
-rsync -vurt --progress /Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/docs/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/docs/
-rsync -vurt --progress /Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/figures/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/figures/
-rsync -vurt --progress /Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/videos/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/videos/
+rsync -vurt --progress /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/data/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/data/
+rsync -vurt --progress /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/docs/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/docs/
+rsync -vurt --progress /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/figures/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/figures/
+rsync -vurt --progress /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/videos/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/videos/
+rsync -vurt --progress /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/scripts-ECM-mRNA-polarization-secretion-paper/ /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/scripts-ECM-mRNA-polarization-secretion-paper/
 
 ############ backup work on the Gtech drive to Box ############
-rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/data/ /Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/data/
-rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/docs/ /Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/docs/
-rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/figures/ /Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/figures/
-rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/videos/ /Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/videos/
+rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/data/ /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/data/
+rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/docs/ /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/docs/
+rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/figures/ /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/figures/
+rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/videos/ /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/videos/
+rsync -vurt --progress /Volumes/ShaoheGtech2/_Gtech-SMG-ECM-mRNA-polarization-secretion-paper/scripts-ECM-mRNA-polarization-secretion-paper/ /Users/wangs20/boxdrive/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/scripts-ECM-mRNA-polarization-secretion-paper/
 
 echo ""
 echo "~*~*~*~*~*~*~*~*~*~*~*~*~*"
