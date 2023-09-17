@@ -18,7 +18,7 @@ for (i=0; i<fList.length; i++) {
 	open(f);
 	run("Make Composite");
 	setTool("rectangle");
-	waitForUser("Draw a square, duplicate, and rotate if needed.");
+	waitForUser("Draw a square, duplicate, and rotate if needed.\nMake the curved surface facing uppper right.");
 	filenamePrefix = getPathFilenamePrefix(f);
 	outputFilename = outputFolder + filenamePrefix + "-pp.tif";
 	saveAs("tiff", outputFilename);
