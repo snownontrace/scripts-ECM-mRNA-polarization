@@ -16,6 +16,7 @@ logFolder = outputFolder + "log_files" + File.separator;
 if ( !(File.exists(logFolder)) ) { File.makeDirectory(logFolder); }
 
 // number of files to process using manual optimization
+// large number is to enforce manual threshold choices for all images
 optimizationN = 100;
 // rGB is the radius for Gaussian filter -- 1 is good to filter out camera noise
 rGB = 1;

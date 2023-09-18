@@ -16,11 +16,7 @@ for (i=0; i<fList.length; i++) {
 	f = fList[i];
 	if ( endsWith(f, File.separator) || startsWith(f, ".") || startsWith(f, "~") || startsWith(f, "_") ) { continue; } //skip if f is a folder, or system files
 	open(inputFolder+f);
-	run("Make Composite");
-	setTool("rectangle");
-	waitForUser("Draw a square, duplicate, and rotate if needed.");
-//	waitForUser("Draw a square including the epithelial ROI");
-//	run("Duplicate...", "duplicate");
+	run("Duplicate...", "duplicate");
 	filenamePrefix = getPathFilenamePrefix(f);
 	outputFilename = outputFolder + filenamePrefix + "-pp.tif";
 	saveAs("tiff", outputFilename);

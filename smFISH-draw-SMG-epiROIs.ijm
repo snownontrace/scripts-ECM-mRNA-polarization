@@ -35,6 +35,10 @@ for (i=0; i<fList.length; i++) {
 	
 	run("Select None");
 	
+	// make composite to facilitate drawing
+	run("Make Composite");
+	
+	// user drawing
 	setTool("polygon");
 	waitForUser("Draw a polygon around epithelial ROI.\nExpand beyond the image to get it all.\nClick OK to continue");
 	roiManager("Add"); // explanded epithelial ROI; # 1

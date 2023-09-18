@@ -1,4 +1,4 @@
-macroName = "/Users/wangs20/Box/Shaohe-Box-Yamada-Lab/_SMG-ECM-mRNA-polarization-secretion-paper/scripts-ECM-mRNA-polarization-secretion-paper/smFISH-compute-apical-basal-ROIs-for-batch.ijm";
+macroName = "/Volumes/wangs6/_PRFS-SMG-ECM-mRNA-polarization-secretion-paper/scripts-ECM-mRNA-polarization-secretion-paper/smFISH-compute-apical-basal-ROIs-for-batch.ijm";
 
 dir = getDirectory("Choose the parent folder containing folders to process:");
 fList = getFileList(dir);

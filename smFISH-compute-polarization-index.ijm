@@ -1,7 +1,7 @@
 clean_up_workspace();
 
 //inputFolder = getDirectory("Choose the folder containing images to process:");
-inputFolder = getArgument();
+inputFolder = getArgument();// for batch processing of multiple folders
 
 // Create an output folder based on the inputFolder
 parentFolder = getPath(inputFolder); inputFolderPrefix = getPathFilenamePrefix(inputFolder);
