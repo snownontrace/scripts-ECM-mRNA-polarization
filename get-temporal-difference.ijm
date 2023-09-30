@@ -12,6 +12,6 @@ selectImage("difference");
 run("Z Project...", "projection=[Max Intensity]");
 
 // close iamges
-selectImage("1-119"); run("Close");
-selectImage("2-120"); run("Close");
-selectImage("difference"); run("Close");
+//selectImage("1-119"); run("Close");
+//selectImage("2-120"); run("Close");
+//selectImage("difference"); run("Close");
